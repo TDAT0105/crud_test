@@ -34,16 +34,25 @@ Dự án Flutter mới.
     flutterfire configure
     ```
 
-    Nếu bạn không thể sử dụng lệnh này, đảm bảo `C:\Users\tenodia\AppData\Local\Pub\Cache\bin` được thêm vào biến PATH của bạn.
+   Nếu bạn không thể sử dụng lệnh này, đảm bảo `C:\Users\tenodia\AppData\Local\Pub\Cache\bin` được thêm vào biến PATH của bạn.
+   ```bash
+        tenodia === tên ổ đĩa của từng máy(không giống nhau hoặc giống)
+   ```
 
-5. Nếu sử dụng Visual Studio Code, khởi động lại sau khi cấu hình FlutterFire.
+6. Nếu sử dụng Visual Studio Code, khởi động lại sau khi cấu hình FlutterFire.
 
-6. Thêm Firebase Core vào dự án Flutter của bạn:
+7. Thêm Firebase Core vào dự án Flutter của bạn:
     ```bash
     flutter pub add firebase_core
     ```
-
-7. Thêm Cloud Firestore vào dự án Flutter của bạn:
+    
+8. Thêm Cloud Firestore vào dự án Flutter của bạn:
     ```bash
     flutter pub add cloud_firestore
     ```
+
+
+9. ERROR:D8: Cannot fit requested classes in a single dex file (# methods: 94385 > 65536)
+   ```bash
+   flutter run --debug -> y
+   ```
