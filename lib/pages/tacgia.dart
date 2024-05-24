@@ -3,15 +3,15 @@ import 'package:crud_test/services/firestoreTacGia.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class TacgiaPage extends StatefulWidget {
-  const TacgiaPage({super.key});
+class TacGiaPage extends StatefulWidget {
+  const TacGiaPage({super.key});
 
   @override
-  State<TacgiaPage> createState() => _TacgiaPageState();
+  State<TacGiaPage> createState() => _TacGiaPageState();
 }
 
-class _TacgiaPageState extends State<TacgiaPage> {
-  final FirestoreService firestoreService = FirestoreService();
+class _TacGiaPageState extends State<TacGiaPage> {
+  final FirestoreTacGia firestoreTacGiaService = FirestoreTacGia();
 
   final TextEditingController textController = TextEditingController();
   
@@ -21,19 +21,6 @@ void openNoteBox({String? docID}) {
   TextEditingController tenTacGia = TextEditingController();
   TextEditingController emailTacGia = TextEditingController();
   TextEditingController sdtTacGia = TextEditingController();
-
-  if(docID != null)
-  {
-    FirebaseFirestore.instance.collection('TacGia').doc(docID).get().then((value) {
-      if(value.exists){
-          setState(() {
-            tenTacGia.text = value['TenTacGia'];
-            emailTacGia.text = value['Email'];
-            sdtTacGia.text = value['SDT'];
-          });
-      }
-    });
-  }
 
   showDialog(
     context: context,
@@ -68,13 +55,13 @@ void openNoteBox({String? docID}) {
           onPressed: () {
            
             if (docID == null) {
-              firestoreService.addTacgias(
+              firestoreTacGiaService.addTacgias(
                 tenTacGia.text,
                 emailTacGia.text,
                 sdtTacGia.text,
               );
             } else {
-              firestoreService.updateTacGia(
+              firestoreTacGiaService.updateTacGia(
                 docID,
                 tenTacGia.text,
                 emailTacGia.text,
@@ -107,7 +94,7 @@ void openNoteBox({String? docID}) {
         child: const Icon(Icons.add),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: firestoreService.getTacGias(),
+        stream: firestoreTacGiaService.getTacGias(),
         builder: (context, snapshot) {
           //if we have data, get all the docs
           if (snapshot.hasData) {
@@ -142,7 +129,7 @@ void openNoteBox({String? docID}) {
                       
                       //delete button
                       IconButton(
-                        onPressed: () => firestoreService.deleteTacGia(docID),
+                        onPressed: () => firestoreTacGiaService.deleteTacGia(docID),
                         icon: const Icon(Icons.delete),
                       ),
                     ],

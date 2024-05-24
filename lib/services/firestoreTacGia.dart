@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirestoreService {
+class FirestoreTacGia {
   //get collection of notes
   final CollectionReference tacgias =
       FirebaseFirestore.instance.collection('TacGia');
@@ -14,11 +14,11 @@ class FirestoreService {
       'SDT': sdt,
     });
   }
-
+  
   //read
   Stream<QuerySnapshot> getTacGias() {
     final noteStream =
-        tacgias.orderBy('Email', descending: true).snapshots();
+        tacgias.orderBy('NgaySinh', descending: true).snapshots();
     return noteStream;
   }
   
@@ -26,7 +26,7 @@ class FirestoreService {
   Future<void> updateTacGia(
       String docID, String newtenTacGia, String newEmail, String newSDT) {
     return tacgias.doc(docID).update({
-      'TenTacGia': newtenTacGia,
+      'note': newtenTacGia,
       'NgaySinh': Timestamp.now(),
       'Email': newEmail,
       'SDT': newSDT,
