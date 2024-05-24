@@ -22,6 +22,19 @@ void openNoteBox({String? docID}) {
   TextEditingController emailTacGia = TextEditingController();
   TextEditingController sdtTacGia = TextEditingController();
 
+  if(docID != null)
+  {
+    FirebaseFirestore.instance.collection('TacGia').doc(docID).get().then((value) {
+      if(value.exists){
+          setState(() {
+            tenTacGia.text = value['TenTacGia'];
+            emailTacGia.text = value['Email'];
+            sdtTacGia.text = value['SDT'];
+          });
+      }
+    });
+  }
+
   showDialog(
     context: context,
     builder: (context) => AlertDialog(

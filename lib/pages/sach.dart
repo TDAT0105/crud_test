@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud_test/services/firestoreSach.dart';
-import 'package:crud_test/services/firestoreTacGia.dart';
 import 'package:flutter/material.dart';
 
 class SachPage extends StatefulWidget {
@@ -8,123 +7,124 @@ class SachPage extends StatefulWidget {
 
   @override
   State<SachPage> createState() => _SachPageState();
+  
 }
 
 class _SachPageState extends State<SachPage> {
-  final FireStoreSach fireStoreSach = FireStoreSach();
-
-  String? selectedTacGia = "0";
+  String? selectedTacGia;
 
   void openNoteBox({String? docID}) {
-    TextEditingController tenSach = TextEditingController();
-    TextEditingController idTacGia = TextEditingController();
-    TextEditingController giaTien = TextEditingController();
-    TextEditingController ngayXuatBan = TextEditingController();
-
+  TextEditingController tenSach = TextEditingController();
+  TextEditingController giaTien = TextEditingController();
+  TextEditingController ngayXuatBan = TextEditingController();
+  
   
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: tenSach,
-              decoration: const InputDecoration(
-                hintText: 'Tên Sách',
-              ),
-            ),
-            const SizedBox(height: 8), // Add some spacing
-
-            StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance.collection('TacGia').snapshots(),
-                builder: (context, snapshot) {
-                  List<DropdownMenuItem> tacgiaItem = [];
-                  if (!snapshot.hasData) {
-                    const CircularProgressIndicator();
-                  } else {
-                    final tacgias = snapshot.data?.docs.reversed.toList();
-                    tacgiaItem.add(DropdownMenuItem(
-                      value: "0",
-                      child: Text('Chọn tác giả'),
-                      )
-                    );
-                    
-                    for (var tacgia in tacgias!) {
-                      tacgiaItem.add(
-                        DropdownMenuItem(
-                          value: tacgia.id,
-                          child: Text(
-                            tacgia['TenTacGia'],
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                  return DropdownButton(
-                    items: tacgiaItem,
-                    onChanged: (tacgiaValue) {
-                      setState(() {
-                        selectedTacGia = tacgiaValue;
-                      });
-                      print(tacgiaValue);
-                    },
-                    value: selectedTacGia,
-                    isExpanded: false,
-                  );
-                }),
-
-            const SizedBox(height: 8), // Add some spacing
-            TextField(
-              controller: giaTien,
-              decoration: const InputDecoration(
-                hintText: 'Giá tiền',
-              ),
-            ),
-
-            const SizedBox(height: 8), // Add some spacing
-            TextField(
-              controller: ngayXuatBan,
-              decoration: const InputDecoration(
-                hintText: 'Ngày Xuất Bản',
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          // ElevatedButton(
-          //   onPressed: () {
-
-          //     if (docID == null) {
-          //       fireStoreSach.addSaches(
-          //         tenSach.text,
-          //         giaTien.text,
-          //         ngayXuatBan.text,
-          //       );
-          //     } else {
-          //       fireStoreSach.updateSach(
-          //         docID,
-          //         tenSach.text,
-          //         giaTien.text,
-          //         ngayXuatBan.text,
-          //       );
-          //     }
-
-          //     tenTacGia.clear();
-          //     emailTacGia.clear();
-          //     sdtTacGia.clear();
-          //     Navigator.pop(context);
-          //   },
-          //   child: const Text('Add'),
-          // ),
-        ],
-      ),
-    );
+  if (docID != null) {
+    FirebaseFirestore.instance.collection('Sach').doc(docID).get().then((snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+          tenSach.text = snapshot['TenSach'];
+          giaTien.text = snapshot['GiaTien'];
+          ngayXuatBan.text = snapshot['NgayXuatBan'];
+          selectedTacGia = snapshot['IDTacGia'];
+        });
+      }
+    });
   }
 
-  final FireStoreSach sachService = FireStoreSach();
+  showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: tenSach,
+                  decoration: const InputDecoration(
+                    hintText: 'Tên Sách',
+                  ),
+                ),
+                const SizedBox(height: 8), // Add some spacing
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('TacGia').snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    } else {
+                      List<DropdownMenuItem<String>> tacgiaItems = [];
+                      final tacgias = snapshot.data?.docs.reversed.toList();
+                      if (tacgias != null) {
+                        for (var tacgia in tacgias) {
+                          tacgiaItems.add(
+                            DropdownMenuItem(
+                              value: tacgia.id, 
+                              child: Text(tacgia['TenTacGia']),
+                            ),
+                          );
+                        }
+                      }
+                      return DropdownButton<String>(
+                        isExpanded: true,
+                        hint: Text("Chọn tác giả"),
+                        value: selectedTacGia,
+                        items: tacgiaItems,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedTacGia = value;
+                          });
+                        },
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: 8), // Add some spacing
+                TextField(
+                  controller: giaTien,
+                  decoration: const InputDecoration(
+                    hintText: 'Giá tiền',
+                  ),
+                ),
+                const SizedBox(height: 8), // Add some spacing
+                TextField(
+                  controller: ngayXuatBan,
+                  decoration: const InputDecoration(
+                    hintText: 'Ngày Xuất Bản',
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  if (docID == null) {
+                    // Add
+                    FireStoreSach().addSaches(tenSach.text, selectedTacGia!, giaTien.text, ngayXuatBan.text);
+                  } else {
+                    // Update
+                    FireStoreSach().updateSach(docID, tenSach.text, selectedTacGia!, giaTien.text, ngayXuatBan.text);
+                  }
+                  tenSach.clear();
+                  giaTien.clear();
+                  ngayXuatBan.clear();
+                  Navigator.pop(context);
+                },
+                child: Text('Add'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+     
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,55 +136,42 @@ class _SachPageState extends State<SachPage> {
         child: const Icon(Icons.add),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: fireStoreSach.getSaches(),
-          builder: (context, snapshot) {
-            //if we have data, get all the docs
-            if (snapshot.hasData) {
-              List tenSachList = snapshot.data!.docs;
-
-              if (tenSachList.isNotEmpty && !snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: tenSachList.length,
-                    itemBuilder: (context, index) {
-                      //get each individual doc
-                      DocumentSnapshot documentSnapshot = tenSachList[index];
-                      String docID = documentSnapshot.id;
-
-                      //get note from each doc
-                      Map<String, dynamic> data =
-                          documentSnapshot.data() as Map<String, dynamic>;
-                      String tenSach = data['TenSach'];
-
-                      //display as a list tile
-                      return ListTile(
-                        title: Text(tenSach),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            //update button
-                            IconButton(
-                              onPressed: () => openNoteBox(docID: docID),
-                              icon: const Icon(Icons.settings),
-                            ),
-
-                            //delete button
-                            IconButton(
-                              onPressed: () => fireStoreSach.deleteSach(docID),
-                              icon: const Icon(Icons.delete),
-                            ),
-                          ],
-                        ),
-                      );
-                    });
-              } else {
-                return const Text('No data');
-              }
-            }
-            //if there is no data return nothing
-            else {
-              return const Text('No data');
-            }
-          }),
+        stream: FirebaseFirestore.instance.collection('Sach').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List tenSachList = snapshot.data!.docs;
+            return ListView.builder(
+              itemCount: tenSachList.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot documentSnapshot = tenSachList[index];
+                String docID = documentSnapshot.id;
+                Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+                String tenSach = data['TenSach'];
+                return ListTile(
+                  title: Text(tenSach),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () => openNoteBox(docID: docID),
+                        icon: const Icon(Icons.settings),
+                      ),
+                      IconButton(
+                        onPressed: () => FireStoreSach().deleteSach(docID),
+                        icon: const Icon(Icons.delete),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 }

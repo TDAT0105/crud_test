@@ -5,7 +5,7 @@ class FireStoreSach {
       FirebaseFirestore.instance.collection('Sach');
 
   Future<void> addSaches(
-      String tenSach, String idTacGia, String giaTien, String ngayXuatBan) {
+      String tenSach, String idTacGia,String giaTien, String ngayXuatBan) {
     return saches.add({
       'TenSach': tenSach,
       'IDTacGia': idTacGia,
@@ -20,9 +20,10 @@ class FireStoreSach {
   }
 
   Future<void> updateSach(
-      String docID, String tenSach, String idTacGia, String giaTien, String ngayXuatBan) {
+      String docID, String tenSach,  String idTacGia ,String giaTien, String ngayXuatBan) {
     return saches.doc(docID).update({
       'TenSach': tenSach,
+      // 'TenTacGia': tenTacGia,
       'IDTacGia': idTacGia,
       'GiaTien': giaTien,
       'NgayXuatBan': ngayXuatBan,
