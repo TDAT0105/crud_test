@@ -1,5 +1,6 @@
 import 'package:crud_test/firebase_options.dart';
-import 'package:crud_test/pages/home.dart';
+import 'package:crud_test/pages/sach.dart';
+import 'package:crud_test/pages/tacgia.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       // theme: ThemeData.dark(useMaterial3: true),
-      home: HomePage(),
+      home: SachPage(),
     );
   }
 }

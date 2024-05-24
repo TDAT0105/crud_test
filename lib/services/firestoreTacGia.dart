@@ -18,7 +18,7 @@ class FirestoreService {
   //read
   Stream<QuerySnapshot> getTacGias() {
     final noteStream =
-        tacgias.orderBy('NgaySinh', descending: true).snapshots();
+        tacgias.orderBy('Email', descending: true).snapshots();
     return noteStream;
   }
   
@@ -26,7 +26,7 @@ class FirestoreService {
   Future<void> updateTacGia(
       String docID, String newtenTacGia, String newEmail, String newSDT) {
     return tacgias.doc(docID).update({
-      'note': newtenTacGia,
+      'TenTacGia': newtenTacGia,
       'NgaySinh': Timestamp.now(),
       'Email': newEmail,
       'SDT': newSDT,

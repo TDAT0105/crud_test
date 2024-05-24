@@ -3,14 +3,14 @@ import 'package:crud_test/services/firestoreTacGia.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class TacgiaPage extends StatefulWidget {
+  const TacgiaPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<TacgiaPage> createState() => _TacgiaPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _TacgiaPageState extends State<TacgiaPage> {
   final FirestoreService firestoreService = FirestoreService();
 
   final TextEditingController textController = TextEditingController();
