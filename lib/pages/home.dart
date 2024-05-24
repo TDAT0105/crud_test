@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
 
                       Navigator.pop(context);
                     },
-                    child: Text('Add')),
+                    child: const Text('Add')),
               ],
             ));
   }
@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
           }
           //if there is no data return nothing
           else{
-            return Text('No data');
+            return const Text('No data');
           }
         }
       ),
