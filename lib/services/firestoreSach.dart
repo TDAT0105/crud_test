@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FireStoreSach {
-  final CollectionReference saches =
+  static CollectionReference saches =
       FirebaseFirestore.instance.collection('Sach');
 
-  Future<void> addSaches(
+  static Future<void> addSaches(
       String tenSach, String idTacGia,String giaTien, String ngayXuatBan) {
     return saches.add({
       'TenSach': tenSach,
@@ -14,12 +14,12 @@ class FireStoreSach {
     });
   }
 
-  Stream<QuerySnapshot> getSaches() {
+  static Stream<QuerySnapshot> getSaches() {
     final sachStream = saches.orderBy('TenSach', descending: true).snapshots();
     return sachStream;
   }
 
-  Future<void> updateSach(
+  static Future<void> updateSach(
       String docID, String tenSach,  String idTacGia ,String giaTien, String ngayXuatBan) {
     return saches.doc(docID).update({
       'TenSach': tenSach,
@@ -30,7 +30,7 @@ class FireStoreSach {
     });
   }
 
-  Future<void> deleteSach(String docID) {
+  static Future<void> deleteSach(String docID) {
     return saches.doc(docID).delete();
   }
 }
